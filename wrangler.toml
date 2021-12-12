@@ -1,0 +1,19 @@
+name = "firenza"
+type = "javascript"
+account_id = "864cdf76f8254fb5539425299984d766"
+zone_id = "bce060010725e72767113b412632a852"
+route = "https://cdn.goalastair.com/*"
+kv_namespaces = [{binding = "KV", id = "b67bf7eb75f64392b0c3d7fef8e63079", preview_id = "b67bf7eb75f64392b0c3d7fef8e63079"}]
+compatibility_date = "2021-12-11"
+
+[dev]
+port = 80
+
+[build.upload]
+format = "modules"
+dir = "src"
+main = "index.ts"
+
+[[build.upload.rules]]
+type = "Text"
+globs = ["**/*.html"]
