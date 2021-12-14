@@ -20,7 +20,7 @@ jobs:
       - name: Typecheck Worker
         run: yarn tsc
       - name: Build Workers
-        run: yarn build:workers
+        run: yarn build:mjs
       - name: Test Workers
         env:
           B2APIKEY: ${{ secrets.B2APIKEY }}
