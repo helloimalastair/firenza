@@ -6,7 +6,7 @@ export default {
       url = new URL(req.url);
     if(url.pathname === "/") return homePage();
     // If result is cached, serve it immediately.
-    let res = await cache.match(url.pathname);
+    let res = await cache.match(req.url);
     if(res) return res;
     // Since result is not cached, attempt to retrieve from B2.
     res = await b2RequestHandler(url.pathname, env, ctx, req.url);
@@ -14,7 +14,7 @@ export default {
     let bodies = res.body.tee();
     const cacheRes = new Response(bodies[0]);
     cacheRes.headers.set("Cloudflare-CDN-Cache-Control", `max-age=${env.MAX_AGE}`);
-    ctx.waitUntil(cache.put(url.pathname, cacheRes));
+    ctx.waitUntil(cache.put(req.url, cacheRes));
     // Return response
     return new Response(bodies[1]);
   }
