@@ -25,4 +25,4 @@ declare type EnvironmentBindings = {
 declare module "*.html" {
   const content: string;
   export default content;
-}
+};

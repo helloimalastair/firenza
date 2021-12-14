@@ -1,17 +1,22 @@
 import { internalError, fileNotFound } from "./html";
+import mime from "mime/lite";
 export default async function b2RequestHandler(file: string, env: EnvironmentBindings, ctx: ExecutionContext, fullURL: string) : Promise<Response> {
   const token = await tokenGet(env, ctx),
   // fetch resource using token
-    res = await fetch(`https://${env.B2URL}/${env.BUCKET_NAME}/${file}`, {headers: {authorization: token}});
+    res = await fetch(`https://${env.B2URL}/file/${env.BUCKET_NAME}${file}`, {headers: {authorization: token}});
+  console.log(`URL: ${`https://${env.B2URL}/file/${env.BUCKET_NAME}${file}`}, Status: ${res.status}, text: ${res.statusText}`);
   // handle any errors that may have occurred with fetching the resource from B2
   switch(res.statusText) {
-    case "expired_auth_token":
+    case "Expired Auth Token":
       return internalError("Unexpectedly expired token.", fullURL);
-    case "download_cap_exceeded":
+    case "Download Cap Exceeded":
       return internalError("Download Cap has been exceeded.", fullURL);
-    case "not_found":
+    case "Bad Request":
+      return internalError("Bad Request", fullURL);
+    case "Not Found":
       return fileNotFound(fullURL);
   }
+  res.headers.set("content-type", mime.getType(file.split(".")[file.split(".").length - 1]) || "text/plain");
   return res;
 }
 
