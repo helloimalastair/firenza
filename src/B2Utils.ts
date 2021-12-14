@@ -17,6 +17,7 @@ export default async function b2RequestHandler(file: string, env: EnvironmentBin
       return fileNotFound(fullURL);
   }
   res.headers.set("content-type", mime.getType(file.split(".")[file.split(".").length - 1]) || "text/plain");
+  res.headers.set("X-Robots-Tag", "noindex");
   return res;
 }
 
