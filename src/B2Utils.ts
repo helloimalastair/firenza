@@ -1,9 +1,9 @@
 import { internalError, fileNotFound } from "./html";
 import mime from "mime/lite";
 export default async function b2RequestHandler(file: string, env: EnvironmentBindings, ctx: ExecutionContext, fullURL: string) : Promise<Response> {
-  const token = await tokenGet(env, ctx),
+  const token = await tokenGet(env, ctx);
   // fetch resource using token
-    res = await fetch(`https://${env.B2URL}/file/${env.BUCKET_NAME}${file}`, {headers: {authorization: token}});
+  let res = await fetch(`https://${env.B2URL}/file/${env.BUCKET_NAME}${file}`, {headers: {authorization: token}});
   console.log(`URL: ${`https://${env.B2URL}/file/${env.BUCKET_NAME}${file}`}, Status: ${res.status}, text: ${res.statusText}`);
   // handle any errors that may have occurred with fetching the resource from B2
   switch(res.statusText) {
@@ -16,6 +16,8 @@ export default async function b2RequestHandler(file: string, env: EnvironmentBin
     case "Not Found":
       return fileNotFound(fullURL);
   }
+  // Add necessary headers to response
+  res = new Response(res.body);
   res.headers.set("content-type", mime.getType(file.split(".")[file.split(".").length - 1]) || "text/plain");
   res.headers.set("X-Robots-Tag", "noindex");
   return res;
