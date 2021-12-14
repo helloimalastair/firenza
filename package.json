@@ -1,5 +1,8 @@
 {
   "name": "firenza",
+  "private": true,
+  "author": "Alastair",
+  "license": "GPLv3",
   "scripts": {
     "build:html": "node build",
     "build:mjs": "esbuild src/index.ts --bundle --loader:.html=text --minify --sourcemap --format=esm --target=es2020 --outfile=dist/worker.mjs",
