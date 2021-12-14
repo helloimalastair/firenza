@@ -1,0 +1,32 @@
+name: Build, Test and Deploy
+on: [push]
+jobs:
+  Deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Install dependencies
+        uses: actions/checkout@v2
+      - name: Install and Set Up Node
+        with:
+          node-version: 16.13.1
+          cache: "yarn"
+      - name: Install Dependencies
+        run: yarn install
+      - name: Build HTML
+        run: yarn build:html
+      - name: Retrieve Latest Workers Types
+        run: curl https://cdn.jsdelivr.net/npm/@cloudflare/workers-types/index.d.ts -o ./src/types/Workers.ts
+      - name: Typecheck Worker
+        run: yarn tsc
+      - name: Build Workers
+        run: yarn build:workers
+      - name: Test Workers
+        env:
+          B2APIKEY: ${{ secrets.B2APIKEY }}
+          B2URL:  ${{ secrets.B2URL }}
+          BUCKET_NAME: ${{ secrets.BUCKET_NAME }}
+        run: yarn miniflare
+      - name: Deploy Workers
+        uses: cloudflare/wrangler-action@1.3.0
+        with:
+            apiToken: ${{ secrets.CF_API_TOKEN }}
