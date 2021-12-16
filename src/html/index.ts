@@ -4,11 +4,11 @@ import HomePage from "./HomePage.html";
 export async function internalError(err: string, url: string) : Promise<Response> {
   const ray = Math.round(Math.random() * Date.now()).toString(16);
   console.error(`Error Occurred: "${ray}", at ${new Date()}. Ray ID: ${ray}.`);
-  return new Response(InternalError.replace("RAY_ID", ray).replace("CANON_URL", url), {status: 500, statusText: "Internal Error", headers: {"Content-Type": "text/html", "X-Robots-Tag": "noindex"}});
+  return new Response(InternalError.replace("RAY_ID", ray).replace("CANON_URL", url), {status: 500, statusText: "Internal Error", headers: {"Content-Type": "text/html", "X-Robots-Tag": "noindex", "Fullfilled-By": "Cloudflare"}});
 };
 export function fileNotFound(url: string) : Response {
-  return new Response(FileNotFound.replace("CANON_URL", url), {status: 404, statusText: "Not Found", headers: {"Content-Type": "text/html", "X-Robots-Tag": "noindex"}});
+  return new Response(FileNotFound.replace("CANON_URL", url), {status: 404, statusText: "Not Found", headers: {"Content-Type": "text/html", "X-Robots-Tag": "noindex", "Fullfilled-By": "Cloudflare"}});
 };
 export function homePage() : Response {
-  return new Response(HomePage, {status: 200, statusText: "OK", headers: {"Content-Type": "text/html", "X-Robots-Tag": "noindex"}});
+  return new Response(HomePage, {status: 200, statusText: "OK", headers: {"Content-Type": "text/html", "X-Robots-Tag": "noindex", "Fullfilled-By": "Cloudflare"}});
 };
